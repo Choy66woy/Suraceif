@@ -6,9 +6,12 @@ function running(game) {
     var robots;
     var robot;
     var jumpAnimation;
+    var tween;
+    var sprites;
 
-    var playerState = "IDLE";
-    var playerFacing = "RIGHT";
+    var playerState = "IDLERIGHT";
+    var playState = "WALK_LEFT";
+    var platState = "WALK_RIGHT";
 
     function preload() {
         game.load.image('Backgroundz', 'assets/Backgroundz.jpg');
@@ -90,23 +93,22 @@ function running(game) {
         platforms.create(600, 230, 'smalls');
         platforms.create(1300, 400, 'smalls');
         platforms.create(1000, 340, 'smalls');
-        platforms.create(800, 100, 'free');
 
 
 
         this.platforms = this.add.physicsGroup();
         this.platforms.create(-300, 225, 'jet');
         this.platforms.create(-300, 100, 'jet');
-        this.platforms.setAll('body.velocity.x', 700);
+        this.platforms.setAll('body.velocity.x', 1700);
 
         this.platforms = this.add.physicsGroup();
         this.platforms.create(-300, 200, 'jet');
         this.platforms.create(-300, 125, 'jet');
-        this.platforms.setAll('body.velocity.x', 800);
+        this.platforms.setAll('body.velocity.x', 1800);
 
         this.platforms = this.add.physicsGroup();
         this.platforms.create(-300, 150, 'jet');
-        this.platforms.setAll('body.velocity.x', 900);
+        this.platforms.setAll('body.velocity.x', 1900);
 
 
 
@@ -115,16 +117,16 @@ function running(game) {
         this.platforms = this.add.physicsGroup();
         this.platforms.create(-2000, 225, 'jet');
         this.platforms.create(-2000, 100, 'jet');
-        this.platforms.setAll('body.velocity.x', 780);
+        this.platforms.setAll('body.velocity.x', 1780);
 
         this.platforms = this.add.physicsGroup();
         this.platforms.create(-2000, 200, 'jet');
         this.platforms.create(-2000, 125, 'jet');
-        this.platforms.setAll('body.velocity.x', 800);
+        this.platforms.setAll('body.velocity.x', 1800);
 
         this.platforms = this.add.physicsGroup();
         this.platforms.create(-2000, 150, 'jet');
-        this.platforms.setAll('body.velocity.x', 840);
+        this.platforms.setAll('body.velocity.x', 1840);
 
 
 
@@ -164,9 +166,11 @@ function running(game) {
         game.physics.arcade.enable(player);
         player.animations.add('left', [0, 1, 2, 3, 4, 5, 6, 7], 12, true);
         player.animations.add('right', [19, 20, 21, 22, 23, 24, 25, 26], 12, true);
-        player.animations.add('idle', [8, 9, 10 ,11, 12, 13, 14, 15, 16, 17, 18], 8, true);
-        player.animations.add('land', [34, 35, 36, 8], 8, false);
-        jumpAnimation = player.animations.add('jump', [28, 28, 28, 28, 29, 30 ,31, 32, 33, 31, 32, 33, 31, 32, 33, 31, 32, 33], 8, false);
+        player.animations.add('idleright', [8, 9, 10 ,11, 12, 13, 14, 15, 16, 17, 18], 8, true);
+        player.animations.add('idleleft', [ 39, 40, 41, 42, 43, 44, 45, 46], 8, true);
+        player.animations.add('land', [33, 34, 35, 8], 8, false);
+        player.animations.add('jumpright', [28, 29, 30, 31, 32, 30, 31, 32, 30, 31, 32], 8, false);
+        player.animations.add('jumpleft', [48, 49, 50, 51, 50, 51, 52, 50, 51, 52], 8, false);
         player.body.setSize(20, 30, 20, 10)
 
 
@@ -176,7 +180,7 @@ function running(game) {
         cursors = game.input.keyboard.createCursorKeys();
         game.camera.follow(player);
 
-        game.add.tween(robot).to( { x: 800 }, 99900,  Phaser.Easing.Linear.None, true);
+        tween = game.add.tween(robot).to( { x: 100 }, 2000,  Phaser.Easing.Linear.None, true);
 
     }
 
@@ -188,39 +192,74 @@ function running(game) {
         /*
         * State Transitions
         */
+        
+//        1. sprite is in the air
+//          a. move left
+//          b. move right
+//        2. sprite is on the ground
+//          a. move left
+//          b. move right
+//          b. jump (left or right)
+//          b. idle (left or right)
+        
+        //if (player.body.touching.down) {
+            // On the ground:
+            // start jump left/right
+        //    if (cursors.up.isDown )
+            // walk left/right, 
+            // idle left/right, 
+        //} else {
+            // In the air
+            
+        //}
+        
+        
         if (playerState == "JUMP") {
             if (player.body.touching.down) {
                 player.body.velocity.x = 0;
             }
             if (player.body.touching.down) {
-                playerState = "IDLE";
+                playerState = "IDLERIGHT";
             }
         }
-        else if (playerState == "JUMP_START") {
-            playerState = "JUMP";
+        else if (playerState == "JUMP_RIGHT") {
+            playerState = "JUMP_RIGHT";
+        }
+         else if (cursors.up.isDown && player.body.touching.down) {
+            playerState = "JUMP_LEFT";
         }
         else if (cursors.up.isDown && player.body.touching.down) {
-            playerState = "JUMP_START";
+            playerState = "JUMP_RIGHT";
         }
         else if (cursors.left.isDown) {
             playerState = "WALK_LEFT";
-            playerFacing = "LEFT";
         } 
         else if (cursors.right.isDown) {
             playerState = "WALK_RIGHT";
-            playerFacing = "RIGHT";
         } 
         else {
-            playerState = "IDLE";
+            // player should be idle, none of the cursors are down
+            if (playerState == "WALK_LEFT") {
+                // we just finished walking left
+                playerState = "IDLELEFT"
+            } else if (playerState == "WALK_RIGHT") {
+                
+                playerState = "IDLERIGHT"
+                       }
         }
 
         /*
         * Handle player state
         */
         switch (playerState) {
-            case "IDLE":
+            case "IDLELEFT":
                 player.body.velocity.x = 0;
-                player.animations.play('idle');
+                player.animations.play('idleleft');
+                break;
+                
+            case "IDLERIGHT":
+                player.body.velocity.x = 0;
+                player.animations.play('idleright');
                 break;
 
             case "WALK_LEFT":
@@ -233,16 +272,22 @@ function running(game) {
                 player.animations.play('right');
                 break;
 
-            case "JUMP_START":
+            case "JUMP_RIGHT":
                 player.body.velocity.y = -300;
-                player.animations.play('jump')
+                player.animations.play('jumpright')
                 break;
+                
+            case "JUMP_LEFT":
+                player.body.velocity.y = -300;
+                player.animations.play('jumpleft')
+                break;
+
 
             case "JUMP":
                 break;
 
             default:
-                throw new Error("Invalid player state")
+                throw new Error("Invalid player state: " + playerState)
         }
 
     }
