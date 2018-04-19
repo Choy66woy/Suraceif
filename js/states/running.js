@@ -171,11 +171,10 @@ function running(game) {
         player.animations.add('idleleft', [ 39, 40, 41, 42, 43, 44, 45, 46], 8, true);
         player.animations.add('land', [33, 34, 35, 8], 8, false);
         player.animations.add('jumpright', [28, 29, 30, 31, 32, 30, 31, 32, 30, 31, 32], 8, false);
-        player.animations.add('fallright', [28, 29, 30, 31, 32, 30, 31, 32, 30, 31, 32], 8, false);
+        player.animations.add('fallright', [30, 31, 32, 30, 31, 32, 30, 31, 32], 8, false);
         player.animations.add('jumpleft', [48, 49, 50, 51, 50, 51, 52, 50, 51, 52], 8, false);
         player.body.setSize(20, 30, 20, 10)
-
-        player.animations.add('jumpleft', [48, 49, 50, 51, 50, 51, 52, 50, 51, 52], 8, false);
+        player.animations.add('fallleft', [50, 51, 50, 51, 52, 50, 51, 52], 8, false);
         player.body.setSize(20, 30, 20, 10)
 
 
@@ -263,71 +262,12 @@ function running(game) {
                 }
             }
         } else {
+            
             //what happens if the player is not on the ground?
             
         }
         
-        
-        
-//        if (cursors.up.isDown && player.body.touching.down) {
-//            // player is on ground and started jump
-//            if (playerState == "WALK_LEFT" || playerState == "IDLELEFT") {
-//                playerState = "JUMP_LEFT";
-//            }
-//            else if (playerState == "WALK_RIGHT" || playerState == "IDLERIGHT"){
-//                playerState = "JUMP_RIGHT"
-//            }
-//        
-//        } else if (player.body.touching.down){
-//            //on the ground not starting jump 
-//            if (cursors.left.isDown) {
-//                playerState = "WALK_LEFT";
-//            } 
-//            else if (cursors.right.isDown) {
-//                playerState = "WALK_RIGHT";
-//            } 
-//            else {
-//                // player should be idle, none of the cursors are down
-//                if (playerState == "WALK_LEFT" || playerState == "JUMP_LEFT") {
-//                    // we just finished walking left
-//                    playerState = "IDLELEFT"
-//                } else if (playerState == "WALK_RIGHT" || playerState == "JUMP_RIGHT") {
-//
-//                    playerState = "IDLERIGHT"
-//                }
-//            }
-//        } else {
-//            //In the air
-//            if (cursors.right.isDown){
-//                playerState = "JUMP_RIGHT";
-//            }
-//            else if (playerState == "JUMP_RIGHT"){
-//                playerState = "AIR_RIGHT"
-//            }
-//            else if (cursors.left.isDown){
-//                playerState = "JUMP_LEFT";
-//            }
-//            else if (playerState == "JUMP_LEFT"){
-//                playerState = "AIR_LEFT"
-//            }
-//        }
-//        else {
-//                if (playerState == "WALK_LEFT") {
-//                // we just finished walking left
-//                playerState = "IDLELEFT"
-//            } else if (playerState == "WALK_RIGHT") {
-//                
-//                playerState = "IDLERIGHT"
-//                }
-//        }
-//            if (player.body.touching.down) {
-//                playerState = "IDLERIGHT";
-//            }
-//        }
-//        else if (playerState == "JUMP_RIGHT") {
-//            playerState = "JUMP_RIGHT";
-//        }
-//    
+    
        
 
         /*
@@ -372,11 +312,11 @@ function running(game) {
                 break;
                 
             case "AIR_RIGHT":
-                player.animations.play('jumpright')
+                player.animations.play('fallright')
                 break;
                 
             case "AIR_LEFT":
-                player.animations.play('jumpleft')
+                player.animations.play('fallleft')
                 break;
 
 
